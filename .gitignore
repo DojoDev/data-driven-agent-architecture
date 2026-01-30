@@ -1,0 +1,77 @@
+# ===============================
+# Python
+# ===============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===============================
+# Virtual Environments
+# ===============================
+venv/
+venv_*/
+.env/
+.env.*
+
+# ===============================
+# Environment variables
+# ===============================
+.env
+
+# ===============================
+# OS / Editor
+# ===============================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+
+
+# Virtual environment
+venv_neo/
+venv_estech/
+venv_neo
+venv_estech
+# ===============================
+# Logs
+# ===============================
+*.log
+
+# ===============================
+# Coverage / Test artifacts
+# ===============================
+.coverage
+htmlcov/
+
+# ===============================
+# Build / Distribution
+# ===============================
+build/
+dist/
+
+# ===============================
+# Temporary files
+# ===============================
+*.tmp
+*.bak
+*.swp
+
+# ===============================
+# Jupyter (se usar futuramente)
+# ===============================
+.ipynb_checkpoints/
+
+# ===============================
+# RAG / Vector Database
+# ===============================
+data/chroma_db/
+docs/*.pdf
+*.pdf

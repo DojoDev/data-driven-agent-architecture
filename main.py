@@ -1,11 +1,13 @@
 """
-POC - Agente de Consulta de Consumo Energético
+POC - Agente de Consulta de Consumo Energético com RAG
 Arquitetura baseada em princípios SOLID
 """
 import os
 from dotenv import load_dotenv
 from app.infrastructure.llm.openai_provider import OpenAIProvider
 from app.infrastructure.tools.get_energy_consumption_tool import GetEnergyConsumptionTool
+from app.infrastructure.tools.rag_search_tool import RAGSearchTool
+from app.infrastructure.rag.chroma_provider import ChromaRAGProvider
 from app.use_cases.agent import Agent
 
 
@@ -25,23 +27,40 @@ def main():
         return
     
     # Inicializa componentes (seguindo Dependency Inversion)
-    print("🤖 Inicializando Lume - Assistente de Eficiência Energética\n")
+    print("🤖 Inicializando Lume - Assistente de Eficiência Energética com RAG\n")
     
     # 1. Provider de LLM (pode ser trocado facilmente)
     llm_provider = OpenAIProvider(api_key=openai_key, model="gpt-4o-mini")
     
-    # 2. Tools disponíveis (pode adicionar mais tools facilmente)
+    # 2. Provider de RAG (pode ser trocado facilmente)
+    rag_provider = ChromaRAGProvider(
+        openai_api_key=openai_key,
+        persist_directory="./data/chroma_db",
+        collection_name="knowledge_base"
+    )
+    
+    # Verifica se há documentos na base
+    stats = rag_provider.get_stats()
+    if stats.get("total_documents", 0) > 0:
+        print(f"📚 Base de conhecimento carregada: {stats['total_documents']} chunks disponíveis")
+    else:
+        print("⚠️  Base de conhecimento vazia. Use 'python ingest_pdf.py <arquivo.pdf>' para adicionar documentos.")
+    
+    # 3. Tools disponíveis (pode adicionar mais tools facilmente)
     tools = [
-        GetEnergyConsumptionTool(api_url=api_url, api_token=api_token)
+        GetEnergyConsumptionTool(api_url=api_url, api_token=api_token),
+        RAGSearchTool(rag_provider=rag_provider)
     ]
     
-    # 3. Agente orquestrador
+    # 4. Agente orquestrador
     agent = Agent(llm_provider=llm_provider, tools=tools)
     
     # Interface de chat
     print("=" * 60)
     print("Lume está pronta! Digite 'sair' para encerrar.")
-    print("Experimente perguntar sobre consumo de sensores.")
+    print("Experimente perguntar sobre:")
+    print("  • Consumo de sensores (dados em tempo real)")
+    print("  • Documentação e procedimentos (base de conhecimento)")
     print("=" * 60)
     print()
     

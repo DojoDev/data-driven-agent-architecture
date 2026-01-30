@@ -47,3 +47,36 @@ class LLMProvider(ABC):
         Retorna um dict com a resposta do LLM e possível tool call.
         """
         raise NotImplementedError
+
+
+class RAGProvider(ABC):
+    """Interface abstrata para providers de RAG (Retrieval-Augmented Generation)"""
+
+    @abstractmethod
+    def search(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
+        """
+        Busca documentos relevantes na base de conhecimento
+        
+        Args:
+            query: Consulta do usuário
+            top_k: Número de documentos mais relevantes a retornar
+            
+        Returns:
+            Lista de documentos com conteúdo e metadados
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def add_documents(self, documents: List[str], metadatas: Optional[List[Dict[str, Any]]] = None) -> bool:
+        """
+        Adiciona documentos à base de conhecimento
+        
+        Args:
+            documents: Lista de textos a serem indexados
+            metadatas: Metadados opcionais para cada documento
+            
+        Returns:
+            True se bem-sucedido
+        """
+        raise NotImplementedError
+

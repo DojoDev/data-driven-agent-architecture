@@ -1,16 +1,21 @@
-# POC - Agente de Consulta de Consumo Energético
+# POC - Agente de Consulta de Consumo Energético com RAG
 
-Proof of Concept de um agente conversacional para consulta de dados de consumo energético, seguindo princípios SOLID e boas práticas de arquitetura. **Inclui API simulada com FastAPI.**
+Proof of Concept de um agente conversacional para consulta de dados de consumo energético **com RAG (Retrieval-Augmented Generation)**, seguindo princípios SOLID e boas práticas de arquitetura. **Inclui API simulada com FastAPI e base de conhecimento vetorial.**
 
 ## 🎯 Objetivo
 
-Demonstrar uma arquitetura limpa e extensível para orquestração de agentes com LLM e tools customizadas, inspirada nas práticas da Estech.
+Demonstrar uma arquitetura limpa e extensível para orquestração de agentes com LLM, tools customizadas e RAG, inspirada nas práticas da Estech.
 
-## 🆕 Novidade: API Simulada Incluída!
+## 🆕 Novidades
 
-Esta POC agora inclui uma **API REST completa** que simula a API do Data Driven, permitindo testar o agente com chamadas reais a endpoints HTTP!
+### 1. RAG - Base de Conhecimento 📚
+- ✅ Busca vetorial com ChromaDB
+- ✅ Ingestão de PDFs automática
+- ✅ Embeddings OpenAI
+- ✅ Chunking inteligente de documentos
+- ✅ Persistência em disco
 
-### Recursos da API:
+### 2. API Simulada 🚀
 - ✅ 5 sensores simulados (refrigeração, HVAC, iluminação)
 - ✅ Consulta de consumo por período (hora, dia, semana, mês)
 - ✅ Autenticação via Bearer token
@@ -23,23 +28,29 @@ Esta POC agora inclui uma **API REST completa** que simula a API do Data Driven,
 - **Agent**: Apenas orquestra LLM e tools
 - **Tool**: Apenas define interface de ferramentas
 - **GetEnergyConsumptionTool**: Apenas consulta consumo de energia
+- **RAGSearchTool**: Apenas busca na base de conhecimento
 - **LLMProvider**: Apenas define interface de providers LLM
 - **OpenAIProvider**: Apenas implementa integração com OpenAI
+- **RAGProvider**: Apenas define interface de busca vetorial
+- **ChromaRAGProvider**: Apenas implementa ChromaDB
 
 ### Open/Closed Principle (OCP)
 - Fácil adicionar novos providers LLM (Gemini, DeepSeek, etc.) sem modificar código existente
 - Fácil adicionar novas tools sem modificar o agente
+- Fácil trocar ChromaDB por Pinecone, Weaviate, etc.
 
 ### Liskov Substitution Principle (LSP)
 - Qualquer implementação de `LLMProvider` pode substituir outra
+- Qualquer implementação de `RAGProvider` pode substituir outra
 - Qualquer implementação de `Tool` pode ser usada pelo agente
 
 ### Interface Segregation Principle (ISP)
-- Interfaces mínimas e específicas para LLM e Tools
+- Interfaces mínimas e específicas para LLM, Tools e RAG
 - Nenhuma classe é forçada a implementar métodos que não usa
 
 ### Dependency Inversion Principle (DIP)
 - Agent depende de abstrações (LLMProvider, Tool), não de implementações concretas
+- RAGSearchTool depende de RAGProvider (abstração), não de ChromaDB
 - Facilita testes e manutenção
 
 ## 📁 Estrutura do Projeto
